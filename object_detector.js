@@ -128,7 +128,7 @@ async function process_output(output, img_width, img_height) {
  * @param box2 Second box in format: [x1,y1,x2,y2,object_class,probability]
  * @returns Intersection over union ratio as a float number
  */
-const iou = (box1,box2) => intersect(box1,box2)/union(box1,box2);
+const iou = (box1,box2) => intersection(box1,box2)/union(box1,box2);
 
 /**
  * Function calculates union area of two boxes.
@@ -144,7 +144,7 @@ const union = (box1,box2) => {
     const [box2_x1,box2_y1,box2_x2,box2_y2] = box2;
     const box1_area = (box1_x2-box1_x1)*(box1_y2-box1_y1)
     const box2_area = (box2_x2-box2_x1)*(box2_y2-box2_y1)
-    return box1_area + box2_area - intersect(box1,box2)
+    return box1_area + box2_area - intersection(box1,box2)
 }
 
 /**
@@ -153,7 +153,7 @@ const union = (box1,box2) => {
  * @param box2 Second box in format [x1,y1,x2,y2,object_class,probability]
  * @returns Area of intersection of the boxes as a float number
  */
-const intersect = (box1,box2) => {
+const intersection = (box1,box2) => {
     const [box1_x1,box1_y1,box1_x2,box1_y2] = box1;
     const [box2_x1,box2_y1,box2_x2,box2_y2] = box2;
     const x1 = Math.max(box1_x1,box2_x1);
