@@ -91,7 +91,7 @@ async function run_model(input) {
  * @param img_height Height of original image
  * @returns Array of detected objects in a format [[x1,y1,x2,y2,object_type,probability],..]
  */
-async function process_output(output, img_width, img_height) {
+function process_output(output, img_width, img_height) {
     let boxes = [];
     for (let index=0;index<8400;index++) {
         const [class_id,prob] = [...Array(8400-4).keys()]
