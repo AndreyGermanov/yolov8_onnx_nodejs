@@ -94,7 +94,7 @@ async function run_model(input) {
 function process_output(output, img_width, img_height) {
     let boxes = [];
     for (let index=0;index<8400;index++) {
-        const [class_id,prob] = [...Array(8400-4).keys()]
+        const [class_id,prob] = [...Array(80).keys()]
             .map(col => [col, output[8400*(col+4)+index]])
             .reduce((accum, item) => item[1]>accum[1] ? item : accum,[0,0]);
         if (prob < 0.5) {
@@ -103,8 +103,8 @@ function process_output(output, img_width, img_height) {
         const label = yolo_classes[class_id];
         const xc = output[index];
         const yc = output[8400+index];
-        const w = output[8400*2+index];
-        const h = output[8400*3+index];
+        const w = output[2*8400+index];
+        const h = output[3*8400+index];
         const x1 = (xc-w/2)/640*img_width;
         const y1 = (yc-h/2)/640*img_height;
         const x2 = (xc+w/2)/640*img_width;
@@ -128,7 +128,9 @@ function process_output(output, img_width, img_height) {
  * @param box2 Second box in format: [x1,y1,x2,y2,object_class,probability]
  * @returns Intersection over union ratio as a float number
  */
-const iou = (box1,box2) => intersection(box1,box2)/union(box1,box2);
+function iou(box1,box2) {
+    return intersection(box1,box2)/union(box1,box2);
+}
 
 /**
  * Function calculates union area of two boxes.
@@ -139,7 +141,7 @@ const iou = (box1,box2) => intersection(box1,box2)/union(box1,box2);
  * @param box2 Second box in format [x1,y1,x2,y2,object_class,probability]
  * @returns Area of the boxes union as a float number
  */
-const union = (box1,box2) => {
+function union(box1,box2) {
     const [box1_x1,box1_y1,box1_x2,box1_y2] = box1;
     const [box2_x1,box2_y1,box2_x2,box2_y2] = box2;
     const box1_area = (box1_x2-box1_x1)*(box1_y2-box1_y1)
@@ -153,7 +155,7 @@ const union = (box1,box2) => {
  * @param box2 Second box in format [x1,y1,x2,y2,object_class,probability]
  * @returns Area of intersection of the boxes as a float number
  */
-const intersection = (box1,box2) => {
+function intersection(box1,box2) {
     const [box1_x1,box1_y1,box1_x2,box1_y2] = box1;
     const [box2_x1,box2_y1,box2_x2,box2_y2] = box2;
     const x1 = Math.max(box1_x1,box2_x1);
